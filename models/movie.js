@@ -4,32 +4,32 @@ const validator = require('validator');
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
-    required: [true, 'Страна создания фильма не указана'],
+    required: true,
   },
 
   director: {
     type: String,
-    required: [true, 'Режиссёр фильма не указан'],
+    required: true,
   },
 
   duration: {
     type: Number,
-    required: [true, 'Длительность фильма не указана'],
+    required: true,
   },
 
   year: {
     type: String,
-    required: [true, 'Год выпуска фильма не указан'],
+    required: true,
   },
 
   description: {
     type: String,
-    required: [true, 'Описание фильма не указано'],
+    required: true,
   },
 
   image: {
     type: String,
-    required: [true, 'Ссылка на постер не указана'],
+    required: true,
     validate: {
       validator(link) {
         return validator.isURL(link);
@@ -40,7 +40,7 @@ const movieSchema = new mongoose.Schema({
 
   trailerLink: {
     type: String,
-    required: [true, 'Ссылка на трейлер не указана'],
+    required: true,
     validate: {
       validator(link) {
         return validator.isURL(link);
@@ -51,7 +51,7 @@ const movieSchema = new mongoose.Schema({
 
   thumbnail: {
     type: String,
-    required: [true, 'Постер не указан'],
+    required: true,
     validate: {
       validator(link) {
         return validator.isURL(link);
@@ -63,23 +63,23 @@ const movieSchema = new mongoose.Schema({
   owner: {
     type: mongoose.ObjectId,
     ref: 'user',
-    required: [true, 'Id пользователя не указан'],
+    required: true,
   },
 
   movieId: {
     type: Number,
     ref: 'MoviesExplorer',
-    required: [true, 'Id фильма из MoviesExplorer не указан'],
+    required: true,
   },
 
   nameRU: {
     type: String,
-    required: [true, 'Русское название фильма не указано'],
+    required: true,
   },
 
   nameEN: {
     type: String,
-    required: [true, 'Английское название фильма не указано'],
+    required: true,
   },
 });
 
