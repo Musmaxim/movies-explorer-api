@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const { errors } = require('celebrate');
+const { PORT, MONGO_URL } = require('./config');
 const router = require('./routes/index');
 const errorHandler = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -15,17 +15,15 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-const { PORT = 3000 } = process.env;
-
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/moviesdb', { useNewUrlParser: true });
-
-app.use(limiter);
+mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 app.use(express.json());
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.use(cors());
 
