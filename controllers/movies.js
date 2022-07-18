@@ -11,6 +11,7 @@ module.exports.getMovies = (req, res, next) => {
 
 module.exports.createMovie = (req, res, next) => {
   const {
+    movieId,
     country,
     director,
     duration,
@@ -18,14 +19,13 @@ module.exports.createMovie = (req, res, next) => {
     description,
     image,
     trailerLink,
-    thumbnail,
-    movieId,
     nameRU,
     nameEN,
+    thumbnail,
   } = req.body;
-  const owner = req.user._id;
+
   Movie.create({
-    owner,
+    movieId,
     country,
     director,
     duration,
@@ -33,10 +33,10 @@ module.exports.createMovie = (req, res, next) => {
     description,
     image,
     trailerLink,
-    thumbnail,
-    movieId,
     nameRU,
     nameEN,
+    thumbnail,
+    owner: req.user._id,
   })
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
@@ -49,14 +49,13 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  const id = req.user._id;
-  Movie.findById(req.params._id)
+  Movie.findById(req.params.movieId)
     .orFail(() => new NotFoundError('Фильм не найден'))
     .then((movie) => {
-      if (!movie.owner.equals(id)) {
+      if (movie.owner._id.toString() !== req.user._id) {
         return next(new ForbiddenError('Нельзя удалить чужую карточку фильма'));
       }
-      return movie.remove()
+      return Movie.findByIdAndRemove(req.params.movieId)
         .then(() => res.send({ message: 'Карточка удалена' }));
     })
     .catch(next);

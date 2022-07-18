@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const { errors } = require('celebrate');
-const { PORT, MONGO_URL } = require('./config');
+const { PORT } = require('./config');
 const router = require('./routes/index');
 const errorHandler = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -17,7 +17,7 @@ const limiter = rateLimit({
 
 const app = express();
 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/moviesdb', { useNewUrlParser: true });
 
 app.use(express.json());
 
@@ -25,7 +25,14 @@ app.use(requestLogger);
 
 app.use(limiter);
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://frontend.musmaxim.nomoreparties.sbs',
+    'https://frontend.musmaxim.nomoreparties.sbs',
+  ],
+  methods: ['OPTIONS', 'GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  credentials: true,
+}));
 
 app.use(router);
 

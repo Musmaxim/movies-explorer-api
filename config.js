@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const {
-  PORT = 3000,
+  PORT = 3001,
   NODE_ENV,
   JWT_SECRET,
   MONGO_URL,
