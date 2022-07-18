@@ -9,12 +9,12 @@ module.exports = (req, res, next) => {
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     next(new AuthorizationError('Необходима авторизация'));
-    return;
   }
 
   const token = authorization.replace('Bearer ', '');
 
   let payload;
+
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {

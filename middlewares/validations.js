@@ -1,5 +1,6 @@
 const { celebrate, Joi, CelebrateError } = require('celebrate');
 const validator = require('validator');
+const { ObjectId } = require('mongoose').Types;
 
 const urlValidation = (value) => {
   if (!validator.isURL(value)) {
@@ -10,6 +11,7 @@ const urlValidation = (value) => {
 
 const validateMovie = celebrate({
   body: Joi.object().keys({
+    movieId: Joi.number().required(),
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
@@ -17,16 +19,20 @@ const validateMovie = celebrate({
     description: Joi.string().required(),
     image: Joi.string().custom(urlValidation).required(),
     trailerLink: Joi.string().custom(urlValidation).required(),
+    thumbnail: Joi.string().custom(urlValidation).required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().custom(urlValidation).required(),
-    movieId: Joi.number().required(),
   }),
 });
 
 const validateMovieId = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().required().hex().length(24),
+    movieId: Joi.string().required().custom((value, helpers) => {
+      if (ObjectId.isValid(value)) {
+        return value;
+      }
+      return helpers.message('Передан некорректный Id');
+    }),
   }),
 });
 

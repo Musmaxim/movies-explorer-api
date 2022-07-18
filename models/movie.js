@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const movieSchema = new mongoose.Schema({
+  movieId: {
+    type: Number,
+    required: true,
+  },
+
   country: {
     type: String,
     required: true,
@@ -61,14 +66,8 @@ const movieSchema = new mongoose.Schema({
   },
 
   owner: {
-    type: mongoose.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
-  },
-
-  movieId: {
-    type: Number,
-    ref: 'MoviesExplorer',
     required: true,
   },
 

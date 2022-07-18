@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -9,7 +11,7 @@ const CastError = require('../errors/CastError');
 const AuthorizationError = require('../errors/AuthorizationError');
 
 module.exports.getUserId = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findOne({ _id: req.user._id })
     .orFail(() => new NotFoundError('Нет пользователя с переданным Id'))
     .then((user) => { res.status(200).send({ user }); })
     .catch((err) => {
@@ -49,10 +51,9 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  const id = req.user._id;
   const { name, email } = req.body;
   User.findByIdAndUpdate(
-    id,
+    req.user._id,
     { name, email },
     { new: true, runValidators: true },
   )
