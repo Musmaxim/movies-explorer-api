@@ -25,7 +25,14 @@ app.use(requestLogger);
 
 app.use(limiter);
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://frontend.musmaxim.nomoreparties.sbs',
+    'https://frontend.musmaxim.nomoreparties.sbs',
+  ],
+  methods: ['OPTIONS', 'GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  credentials: true,
+}));
 
 app.use(router);
 
